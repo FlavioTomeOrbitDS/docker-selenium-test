@@ -47,37 +47,30 @@ def profile_search(
         url : str,
         num : int
 ):
-    time.sleep(3)
+    
     driver.get(url)
-
+    time.sleep(3)
     log.warning("Buscando...")
     Ad = []
     results = []
 
 
-    while len(results) < num:
-    # while len(results) < 100:
-
-        tweet = Tweet(driver, Ad)
-
-        try:
-                data = {}
-
-                data["URL"] = tweet.get_url()
-                data["Date"] = tweet.get_date()
-                data["Text"] = tweet.get_text()
-                data["Lang"] = tweet.get_lang()
-                data["Likes"] = tweet.get_num_likes()
-                data["Retweets"] = tweet.get_num_retweet()
-                data["Replies"] = tweet.get_num_reply()
-
-                results.append(data)
-                log.info(f"{len(results)} : {data['URL']}")
-
-
-        except:
-            print("Erro")
-            break
+    while len(results) < num:    
+        tweet = Tweet(driver, Ad)        
+        data = {}
+        
+        data["URL"] = tweet.get_url()
+        data["Date"] = tweet.get_date()
+        data["Text"] = tweet.get_text()
+        data["Lang"] = tweet.get_lang()
+        data["Likes"] = tweet.get_num_likes()
+        data["Retweets"] = tweet.get_num_retweet()
+        data["Replies"] = tweet.get_num_reply()
+    
+            
+        results.append(data)
+        log.info(f"{len(results)} : {data['URL']}")
+            
                 
     return results
 

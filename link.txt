@@ -1,1 +1,1 @@
-https://twitter.com/search?q=BBB&src=typed_query&f=live
+https://twitter.com/search?q=Angular%20lang%3Apt%20until%3A2024-01-02%20since%3A2024-01-01&src=typed_query&f=live

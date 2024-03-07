@@ -8,93 +8,58 @@ import traceback
 import threading
 import time
 class Tweet:
-    # def __init__(self,
-    #         driver: webdriver.Chrome,
-    #         Ad: list
-    # ):
-    #     self.driver = driver
-    #     self.Ad = Ad
 
-    #     while True:
-    #         try:
-    #             self.tweet = self.__get_first_tweet()
-                
-    #             self.__remove_pinned()
 
-    #             self.tweet_url, self.retweet = self.__get_tweet_url()
-    #             self.tweet_date = self.__get_tweet_date()
-    #             self.tweet_text = self.__get_tweet_text()
-    #             self.tweet_lang = self.__get_tweet_lang()
-    #             self.tweet_num_likes = self.__get_tweet_num_likes()
-    #             self.tweet_num_retweet = self.__get_tweet_num_retweet()
-    #             self.tweet_num_reply = self.__get_tweet_num_reply()
-
-    #         except TypeError:
-    #             self.Ad.append(self.tweet)
-    #             sleep(1)
-    #             driver.execute_script("arguments[0].scrollIntoView();", self.tweet)
-    #             continue
-
-    #         except Exception:
-    #             print(traceback.format_exc())
-    #             sleep(1)
-    #             # driver.execute_script("arguments[0].scrollIntoView();", self.tweet)
-    #             input("An error occured: ")
-    #             continue
-    #         break
-        
-    #     self.__delete_tweet()
-    def __init__(self, driver: webdriver.Chrome, Ad: list):
+    def __init__(self,
+            driver: webdriver.Chrome,
+            Ad: list
+    ):
         self.driver = driver
         self.Ad = Ad
 
-        time.sleep(2.5)
         while True:
             try:
                 self.tweet = self.__get_first_tweet()
-
-                if self.tweet is not None:
-                    try:
-                        self.__remove_pinned()
-
-                        self.tweet_url, self.retweet = self.__get_tweet_url()
-                        self.tweet_date = self.__get_tweet_date()
-                        self.tweet_text = self.__get_tweet_text()
-                        self.tweet_lang = self.__get_tweet_lang()
-                        self.tweet_num_likes = self.__get_tweet_num_likes()
-                        self.tweet_num_retweet = self.__get_tweet_num_retweet()
-                        self.tweet_num_reply = self.__get_tweet_num_reply()
-                    except:
-                        None
-                else:
-                    print("Nenhum tweet encontrado. Saindo...")
-                    break
+                
+                if self.tweet == None:
+                    self.tweet_url, self.retweet = "",""
+                    self.tweet_date = ""
+                    self.tweet_text = ""
+                    self.tweet_lang = ""
+                    self.tweet_num_likes = ""
+                    self.tweet_num_retweet = ""
+                    self.tweet_num_reply = ""
                     
-            
+                    break 
+                else:
+                
+                    self.__remove_pinned()
+
+                    self.tweet_url, self.retweet = self.__get_tweet_url()
+                    self.tweet_date = self.__get_tweet_date()
+                    self.tweet_text = self.__get_tweet_text()
+                    self.tweet_lang = self.__get_tweet_lang()
+                    self.tweet_num_likes = self.__get_tweet_num_likes()
+                    self.tweet_num_retweet = self.__get_tweet_num_retweet()
+                    self.tweet_num_reply = self.__get_tweet_num_reply()
+                    
+                    self.__delete_tweet()    
+
             except TypeError:
                 self.Ad.append(self.tweet)
                 sleep(1)
                 driver.execute_script("arguments[0].scrollIntoView();", self.tweet)
                 continue
 
-            except NoSuchElementException:
-                print("Nenhum tweet encontrado. Saindo...")
-                break
-
             except Exception:
                 print(traceback.format_exc())
-                print("Teste")
                 sleep(1)
                 # driver.execute_script("arguments[0].scrollIntoView();", self.tweet)
-                input("An error occurred. Press Enter to continue...")
+                input("An error occured: ")
                 continue
             break
-
-        if self.tweet is not None:
-            self.__delete_tweet()
-        # self.__delete_tweet()
-    
-    
+        
+        
     def get_url(self) -> str:
         return self.tweet_url
     
@@ -117,29 +82,22 @@ class Tweet:
         return self.tweet_num_reply
     
 
-    # def __get_first_tweet(self) -> WebElement:
-    #     while True:
-    #         try:
-    #             tweets = self.driver.find_elements(By.CSS_SELECTOR, "article[data-testid='tweet']")
-    #             for tweet in tweets:
-    #                 if tweet not in self.Ad:
-    #                     return tweet
-    #         except IndexError:
-    #             sleep(0.5)
-    #             continue
     def __get_first_tweet(self) -> WebElement:
-        try:
-            tweets = self.driver.find_elements(By.CSS_SELECTOR, "article[data-testid='tweet']")
-            for tweet in tweets:
-                if tweet not in self.Ad:
-                    return tweet
-        except NoSuchElementException:
-            # Se nenhum tweet for encontrado, retornar None
-            return None
-        return None  # Retornar None se nenhum tweet for encontrado
-
-
-  
+        cont = 0
+        while True:            
+            if cont == 10:
+                return None                
+            else:
+                cont = cont+1
+            try:
+                tweets = self.driver.find_elements(By.CSS_SELECTOR, "article[data-testid='tweet']")
+                for tweet in tweets:
+                    if tweet not in self.Ad:
+                        return tweet
+            except IndexError:
+                sleep(0.5)
+                continue
+      
 
     def __remove_pinned(self):
         while True:
