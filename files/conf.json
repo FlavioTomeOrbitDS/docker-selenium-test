@@ -1,5 +1,5 @@
 {
-    "headless": false,
+    "headless": true,
     "output_form": [
         "URL",
         "Date",

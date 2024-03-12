@@ -9,7 +9,7 @@ from tweet import Tweet
 from excel import Excel
 
 
-def main():
+def main(log, conf):
     if not conf["token"]:
         log.warning("Please set your access token in './files/conf.json' file")
         log.warning("For more info visit this link: https://youtu.be/uHOz7BSPXCo")
@@ -25,17 +25,19 @@ def main():
     
     file_name = 'link.txt'
     url = read_urls_from_file(file_name)
-    num = int(input("Qual o número de tweets desejado: "))
-
+    #num = int(input("Qual o número de tweets desejado: "))
+    num =5
     data = []
     for link in url:
         log.warning(f"Buscando tweets de {link}...")
-        aux = (profile_search(driver, link, num))
+        aux = (profile_search(driver, link, num,log))
         data.append(aux)
 
     log.warning("Salvando...")
     Excel(data)
     json.dump(data, open("./files/temp.json", "w"))
+    
+    return data
 
 def read_urls_from_file(file_name):
     with open(file_name, 'r') as file:
@@ -45,7 +47,8 @@ def read_urls_from_file(file_name):
 def profile_search(
         driver: webdriver.Chrome,
         url : str,
-        num : int
+        num : int,
+        log
 ):
     
     driver.get(url)
@@ -87,6 +90,8 @@ def open_driver(
 
     options.add_argument('--log-level=3')
     options.add_argument('ignore-certificate-errors')
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
     if headless:
         options.add_argument('--headless')
@@ -115,7 +120,7 @@ def load_conf() -> dict:
         return json.loads(file.read())
 
 
-if __name__  == "__main__":
+def init():
     log = Logger()
     try:
         conf = load_conf()
@@ -123,6 +128,5 @@ if __name__  == "__main__":
         log.warning("Sorry and error occured, Please check your config file")
         input("\n\tPress any key to exit...")
     else:
-        main()
-
-
+        return main(log, conf)
+        
